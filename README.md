@@ -122,5 +122,3 @@ dotnet run
 ```
 
 ---
-
-İbrahim Karakaya — 230309015
