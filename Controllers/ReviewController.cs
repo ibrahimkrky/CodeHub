@@ -80,6 +80,59 @@ namespace CodeHub.Controllers
             return RedirectToAction(nameof(Details), new { id = model.Id });
         }
 
+        // Kod incelemesini düzenleme sayfası (GET)
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var review = await _db.Reviews.FindAsync(id);
+            if (review == null) return NotFound();
+            // Sadece incelemeyi açan kişi düzenleyebilir
+            if (review.AuthorId != _userManager.GetUserId(User)) return Forbid();
+            return View(review);
+        }
+
+        // Kod incelemesini düzenleme (POST)
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Review model)
+        {
+            var review = await _db.Reviews.FindAsync(id);
+            if (review == null) return NotFound();
+            if (review.AuthorId != _userManager.GetUserId(User)) return Forbid();
+
+            if (!ModelState.IsValid) return View(model);
+
+            // Sadece içerik alanlarını güncelle (yazar, tarih, yorumlar korunur)
+            review.Title = model.Title;
+            review.Code = model.Code;
+            review.Problem = model.Problem;
+            review.Language = model.Language;
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id = review.Id });
+        }
+
+        // Kod incelemesini sil (POST)
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var review = await _db.Reviews
+                .Include(r => r.Comments).ThenInclude(c => c.Votes)
+                .FirstOrDefaultAsync(r => r.Id == id);
+            if (review == null) return NotFound();
+            if (review.AuthorId != _userManager.GetUserId(User)) return Forbid();
+
+            // Önce bağlı oyları ve yorumları temizle, sonra incelemeyi sil
+            foreach (var c in review.Comments)
+                _db.Votes.RemoveRange(c.Votes);
+            _db.Comments.RemoveRange(review.Comments);
+            _db.Reviews.Remove(review);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
