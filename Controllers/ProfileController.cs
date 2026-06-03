@@ -46,7 +46,8 @@ namespace CodeHub.Controllers
             {
                 DisplayName = user.DisplayName ?? user.UserName!,
                 Email = user.Email!,
-                Score = user.Score,
+                // Puan, liderlik tablosuyla aynı formülle anlık hesaplanır
+                Score = mySnippets.Count * 5 + mySnippets.Sum(s => s.LikeCount),
                 JoinedAt = user.JoinedAt,
                 MySnippets = mySnippets,
                 MyReviews = myReviews,
