@@ -1,0 +1,44 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Giriş";
+}
+<div class="auth-wrap">
+    <div class="auth-card">
+        <span class="ch-logo-big">&lt;/&gt;</span>
+        <h2 class="text-center mb-1">Tekrar hoş geldin</h2>
+        <p class="text-center text-muted-ch mb-4">Hesabına giriş yap</p>
+
+        @if (TempData["Info"] != null)
+        {
+            <div class="alert alert-success py-2">@TempData["Info"]</div>
+        }
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="ornek@@codehub.dev" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" placeholder="••••••" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-check mb-0">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label text-muted-ch"></label>
+                </div>
+                <a asp-action="ForgotPassword" class="small">Şifremi unuttum</a>
+            </div>
+            <button type="submit" class="btn btn-accent w-100">Giriş Yap</button>
+        </form>
+
+        <p class="text-center text-muted-ch mt-3 mb-0 small">
+            Hesabın yok mu? <a asp-action="Register">Kayıt ol</a>
+        </p>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

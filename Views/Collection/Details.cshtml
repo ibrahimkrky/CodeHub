@@ -1,0 +1,59 @@
+@model Collection
+@{
+    ViewData["Title"] = Model.Name;
+}
+<div class="d-flex align-items-center gap-2 mb-1">
+    <a asp-action="MyCollections" class="text-muted-ch"><i class="bi bi-arrow-left"></i> Koleksiyonlarım</a>
+</div>
+<h2 class="section-title">
+    <i class="bi bi-folder2-open"></i> @Model.Name
+    <span class="text-muted-ch" style="font-size:1rem;">(@Model.CollectionSnippets.Count snippet)</span>
+</h2>
+
+@if (!Model.CollectionSnippets.Any())
+{
+    <div class="text-center text-muted-ch py-5">
+        <i class="bi bi-inbox" style="font-size:2rem;"></i>
+        <p class="mt-2">Bu koleksiyonda henüz snippet yok. Bir snippet detayından "Koleksiyona Ekle" ile ekleyebilirsin.</p>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var cs in Model.CollectionSnippets)
+        {
+            var s = cs.Snippet;
+            if (s == null) { continue; }
+            <div class="col-md-6 col-lg-4">
+                <div class="ch-card clickable h-100" data-href="@Url.Action("Details", "Snippet", new { id = s.Id })">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="ch-badge">@s.Language</span>
+                            <form asp-action="RemoveSnippet" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="collectionId" value="@Model.Id" />
+                                <input type="hidden" name="snippetId" value="@s.Id" />
+                                <button type="submit" class="btn btn-link btn-sm p-0 text-danger"
+                                        title="Koleksiyondan çıkar">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <h5 class="card-title">
+                            <a asp-controller="Snippet" asp-action="Details" asp-route-id="@s.Id">@s.Title</a>
+                        </h5>
+                        <p class="text-muted-ch small mb-2">@s.Description</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="ch-tag">@@@(s.Author?.DisplayName ?? "anon")</span>
+                            <small class="text-muted-ch"><i class="bi bi-star-fill text-warning"></i> @s.LikeCount</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script src="~/js/card-click.js"></script>
+}

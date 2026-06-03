@@ -1,0 +1,131 @@
+@model List<Collection>
+@{
+    ViewData["Title"] = "Koleksiyonlarım";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="section-title mb-0"><i class="bi bi-collection"></i> Koleksiyonlarım</h2>
+    <button class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#newColModal">
+        <i class="bi bi-plus-lg"></i> Yeni Koleksiyon
+    </button>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-success">@TempData["Info"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="text-center text-muted-ch py-5">
+        <i class="bi bi-folder-x" style="font-size:2rem;"></i>
+        <p class="mt-2">Henüz koleksiyonun yok. Yeni bir tane oluştur!</p>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var col in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="ch-card clickable h-100 has-dropdown" data-href="@Url.Action("Details", "Collection", new { id = col.Id })">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title mb-0"><i class="bi bi-folder2-open text-warning"></i> @col.Name</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-ch" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end ch-dropdown">
+                                    <li>
+                                        <button class="dropdown-item" type="button"
+                                                data-bs-toggle="modal" data-bs-target="#editColModal"
+                                                data-id="@col.Id" data-name="@col.Name"
+                                                onclick="prepEdit(this)">
+                                            <i class="bi bi-pencil"></i> Yeniden Adlandır
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <form asp-action="Delete" method="post" class="confirm-form"
+                                              data-confirm-message="Bu koleksiyon silinecek. İçindeki snippet'ler silinmez, sadece koleksiyondan çıkar.">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@col.Id" />
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-trash"></i> Sil
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="text-muted-ch small mb-0 mt-2">
+                            <i class="bi bi-code-slash"></i> @col.CollectionSnippets.Count snippet
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<!-- Modal: yeni koleksiyon -->
+<div class="modal fade" id="newColModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background:var(--bg-card); border:1px solid var(--border);">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header" style="border-color:var(--border);">
+                    <h5 class="modal-title">Yeni Koleksiyon</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Koleksiyon adı</label>
+                    <input type="text" name="name" class="form-control" required
+                           placeholder="Örn: React Componentleri" />
+                </div>
+                <div class="modal-footer" style="border-color:var(--border);">
+                    <button type="button" class="btn btn-outline-ch" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-accent">Oluştur</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: koleksiyon yeniden adlandır -->
+<div class="modal fade" id="editColModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background:var(--bg-card); border:1px solid var(--border);">
+            <form asp-action="Rename" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="editColId" />
+                <div class="modal-header" style="border-color:var(--border);">
+                    <h5 class="modal-title">Koleksiyonu Yeniden Adlandır</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Yeni ad</label>
+                    <input type="text" name="name" id="editColName" class="form-control" required />
+                </div>
+                <div class="modal-footer" style="border-color:var(--border);">
+                    <button type="button" class="btn btn-outline-ch" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-accent">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/card-click.js"></script>
+    <script>
+        // Düzenle modalını açarken mevcut değerleri doldur
+        function prepEdit(btn) {
+            document.getElementById('editColId').value = btn.getAttribute('data-id');
+            document.getElementById('editColName').value = btn.getAttribute('data-name');
+        }
+    </script>
+}

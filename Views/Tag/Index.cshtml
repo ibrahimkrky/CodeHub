@@ -1,0 +1,29 @@
+@model List<TagIndexRow>
+@{
+    ViewData["Title"] = "Etiketler";
+}
+<h2 class="section-title"><i class="bi bi-tags"></i> Teknolojiler ve Etiketler</h2>
+
+<div class="ch-search mb-4" style="margin:0 0 1.5rem;">
+    <input type="text" id="tagSearch" class="form-control" placeholder="$ etiket ara..." autocomplete="off" />
+</div>
+
+<div class="tag-grid" id="tagGrid">
+    @foreach (var t in Model)
+    {
+        <a asp-action="Snippets" asp-route-id="@t.Id" class="tag-cell tag-item" data-name="@t.Name.ToLower()">
+            <div class="d-flex justify-content-between align-items-center">
+                <span>#@t.Name</span>
+                <span class="count">@t.SnippetCount</span>
+            </div>
+        </a>
+    }
+</div>
+
+<div id="tagNoResult" class="text-center text-muted-ch py-4" style="display:none;">
+    Eşleşen etiket yok.
+</div>
+
+@section Scripts {
+    <script src="~/js/tag-search.js"></script>
+}

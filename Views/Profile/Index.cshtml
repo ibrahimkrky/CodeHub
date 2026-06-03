@@ -1,0 +1,121 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "Profilim";
+}
+
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-success">@TempData["Info"]</div>
+}
+
+<!-- Profil başlık kartı -->
+<div class="ch-card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="profile-avatar">@(Model.DisplayName.Length > 0 ? Model.DisplayName[0].ToString().ToUpper() : "?")</div>
+                <div>
+                    <h3 class="mb-1">@Model.DisplayName</h3>
+                    <div class="text-muted-ch small">
+                        <i class="bi bi-envelope"></i> @Model.Email
+                        <span class="ms-2"><i class="bi bi-calendar3"></i> @Model.JoinedAt.ToString("MMMM yyyy")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="Edit" class="btn btn-outline-ch btn-sm"><i class="bi bi-pencil"></i> Bilgileri Düzenle</a>
+                <a asp-action="ChangePassword" class="btn btn-outline-ch btn-sm"><i class="bi bi-key"></i> Parola</a>
+            </div>
+        </div>
+
+        <!-- İstatistikler -->
+        <div class="row g-3 mt-2">
+            <div class="col-6 col-md-3">
+                <div class="profile-stat">
+                    <div class="stat-num" style="color:var(--accent)">@Model.Score</div>
+                    <div class="text-muted-ch small">Puan</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="profile-stat">
+                    <div class="stat-num" style="color:var(--accent-2)">@Model.MySnippets.Count</div>
+                    <div class="text-muted-ch small">Snippet</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="profile-stat">
+                    <div class="stat-num" style="color:var(--green)">@Model.TotalLikes</div>
+                    <div class="text-muted-ch small">Beğeni</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="profile-stat">
+                    <div class="stat-num">@Model.TotalViews</div>
+                    <div class="text-muted-ch small">Görüntülenme</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Snippet'lerim -->
+<h4 class="section-title"><i class="bi bi-code-square"></i> Snippet'lerim</h4>
+@if (!Model.MySnippets.Any())
+{
+    <p class="text-muted-ch">Henüz snippet eklemedin. <a asp-controller="Snippet" asp-action="Create">İlk snippet'ini ekle</a>.</p>
+}
+else
+{
+    <div class="row g-3 mb-4">
+        @foreach (var s in Model.MySnippets)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="ch-card clickable h-100" data-href="@Url.Action("Details", "Snippet", new { id = s.Id })">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="ch-badge">@s.Language</span>
+                            <small class="text-muted-ch"><i class="bi bi-star-fill text-warning"></i> @s.LikeCount</small>
+                        </div>
+                        <h5 class="card-title">
+                            <a asp-controller="Snippet" asp-action="Details" asp-route-id="@s.Id">@s.Title</a>
+                        </h5>
+                        <p class="text-muted-ch small mb-2">@s.Description</p>
+                        <small class="text-muted-ch"><i class="bi bi-eye"></i> @s.ViewCount görüntülenme</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<!-- Kod incelemelerim -->
+<h4 class="section-title"><i class="bi bi-chat-square-text"></i> Kod İncelemelerim</h4>
+@if (!Model.MyReviews.Any())
+{
+    <p class="text-muted-ch">Henüz kod incelemesi açmadın.</p>
+}
+else
+{
+    @foreach (var r in Model.MyReviews)
+    {
+        <div class="ch-card clickable mb-3" data-href="@Url.Action("Details", "Review", new { id = r.Id })">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title mb-0">
+                        <a asp-controller="Review" asp-action="Details" asp-route-id="@r.Id">@r.Title</a>
+                    </h5>
+                    @if (r.Comments.Any(c => c.IsSolution))
+                    {
+                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Çözüldü</span>
+                    }
+                </div>
+                <p class="text-muted-ch small mb-1 mt-1">@r.Problem</p>
+                <small class="text-muted-ch"><i class="bi bi-chat"></i> @r.Comments.Count yorum</small>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    <script src="~/js/card-click.js"></script>
+}

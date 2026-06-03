@@ -1,0 +1,33 @@
+@model EditProfileViewModel
+@{
+    ViewData["Title"] = "Bilgileri Düzenle";
+}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <a asp-action="Index" class="text-muted-ch"><i class="bi bi-arrow-left"></i> Profilim</a>
+        </div>
+        <h2 class="section-title"><i class="bi bi-person-gear"></i> Bilgileri Düzenle</h2>
+        <div class="ch-form-card">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+                <div class="mb-3">
+                    <label asp-for="DisplayName" class="form-label"></label>
+                    <input asp-for="DisplayName" class="form-control" />
+                    <span asp-validation-for="DisplayName" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                    <small class="text-muted-ch">E-postanı değiştirirsen bir sonraki girişte yeni e-postanı kullan.</small>
+                </div>
+
+                <button type="submit" class="btn btn-accent">Kaydet</button>
+                <a asp-action="Index" class="btn btn-outline-ch">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

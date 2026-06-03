@@ -1,0 +1,37 @@
+@model Review
+@{
+    ViewData["Title"] = "Yardım İste";
+}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h2 class="section-title"><i class="bi bi-question-circle"></i> Kod İncelemesi İste</h2>
+        <div class="ch-form-card">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Başlık</label>
+                    <input asp-for="Title" class="form-control" placeholder="Sorunu kısaca özetle" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Language" class="form-label">Dil</label>
+                    <input asp-for="Language" class="form-control" placeholder="Örn: C#" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Problem" class="form-label">Sorun açıklaması</label>
+                    <textarea asp-for="Problem" class="form-control" rows="3"
+                              placeholder="Ne yapmaya çalışıyorsun, ne hata alıyorsun?"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Code" class="form-label">Kod</label>
+                    <textarea asp-for="Code" class="form-control ch-code"
+                              placeholder="Sorunlu kodu yapıştır..."></textarea>
+                    <span asp-validation-for="Code" class="text-danger small"></span>
+                </div>
+                <button type="submit" class="btn btn-accent">Paylaş</button>
+                <a asp-action="Index" class="btn btn-outline-ch">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

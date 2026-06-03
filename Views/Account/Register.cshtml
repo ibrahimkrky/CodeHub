@@ -1,0 +1,42 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+<div class="auth-wrap">
+    <div class="auth-card">
+        <span class="ch-logo-big">&lt;/&gt;</span>
+        <h2 class="text-center mb-1">Aramıza katıl</h2>
+        <p class="text-center text-muted-ch mb-4">Yeni bir hesap oluştur</p>
+
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="DisplayName" class="form-label"></label>
+                <input asp-for="DisplayName" class="form-control" placeholder="Adın Soyadın" />
+                <span asp-validation-for="DisplayName" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="ornek@@codehub.dev" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" placeholder="En az 6 karakter" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Parolayı tekrar gir" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+            <button type="submit" class="btn btn-accent w-100">Hesap Oluştur</button>
+        </form>
+
+        <p class="text-center text-muted-ch mt-3 mb-0 small">
+            Zaten hesabın var mı? <a asp-action="Login">Giriş yap</a>
+        </p>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

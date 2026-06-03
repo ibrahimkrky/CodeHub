@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Analiz Paneli";
+}
+<h2 class="section-title"><i class="bi bi-graph-up"></i> Geliştirici Analizi</h2>
+
+<div class="row g-3 mb-4" id="statCards">
+    <div class="col-md-4">
+        <div class="ch-card"><div class="card-body text-center">
+            <div class="text-muted-ch small">Toplam Snippet</div>
+            <div style="font-size:2rem;font-weight:700;color:var(--accent)" id="statSnippets">—</div>
+        </div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="ch-card"><div class="card-body text-center">
+            <div class="text-muted-ch small">Toplam Görüntülenme</div>
+            <div style="font-size:2rem;font-weight:700;color:var(--accent-2)" id="statViews">—</div>
+        </div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="ch-card"><div class="card-body text-center">
+            <div class="text-muted-ch small">Toplam Beğeni</div>
+            <div style="font-size:2rem;font-weight:700;color:var(--green)" id="statLikes">—</div>
+        </div></div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="ch-card"><div class="card-body">
+            <h6 class="text-muted-ch mb-3">Dile Göre Dağılım</h6>
+            <canvas id="langChart"></canvas>
+        </div></div>
+    </div>
+    <div class="col-lg-6">
+        <div class="ch-card"><div class="card-body">
+            <h6 class="text-muted-ch mb-3">Snippet Görüntülenmeleri</h6>
+            <canvas id="viewsChart"></canvas>
+        </div></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="~/js/analytics.js"></script>
+}

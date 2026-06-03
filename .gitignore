@@ -1,0 +1,12 @@
+# Derleme çıktıları
+bin/
+obj/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+
+# Veritabanı (LocalDB dosyaları)
+*.mdf
+*.ldf

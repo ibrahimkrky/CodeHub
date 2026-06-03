@@ -1,0 +1,43 @@
+@model List<LeaderboardRow>
+@{
+    ViewData["Title"] = "Liderlik Tablosu";
+}
+<h2 class="section-title"><i class="bi bi-trophy"></i> Geliştirici Liderlik Tablosu</h2>
+<p class="text-muted-ch">Sütun başlıklarına tıklayarak sıralayabilirsin.</p>
+
+<div class="ch-table">
+    <table class="table mb-0" id="leaderboardTable">
+        <thead>
+            <tr>
+                <th style="width:60px;">#</th>
+                <th data-col="name">Geliştirici</th>
+                <th data-col="snippets" data-type="num">Snippet <i class="bi bi-arrow-down-up small"></i></th>
+                <th data-col="likes" data-type="num">Beğeni <i class="bi bi-arrow-down-up small"></i></th>
+                <th data-col="score" data-type="num">Puan <i class="bi bi-arrow-down-up small"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rank = 1; }
+            @foreach (var row in Model)
+            {
+                <tr>
+                    <td>
+                        @if (rank == 1) { <i class="bi bi-trophy-fill medal-1"></i> }
+                        else if (rank == 2) { <i class="bi bi-trophy-fill medal-2"></i> }
+                        else if (rank == 3) { <i class="bi bi-trophy-fill medal-3"></i> }
+                        else { <span class="text-muted-ch">@rank</span> }
+                    </td>
+                    <td data-name="@row.DisplayName">@row.DisplayName</td>
+                    <td data-snippets="@row.SnippetCount">@row.SnippetCount</td>
+                    <td data-likes="@row.TotalLikes">@row.TotalLikes</td>
+                    <td data-score="@row.Score"><strong style="color:var(--accent)">@row.Score</strong></td>
+                </tr>
+                rank++;
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/js/leaderboard.js"></script>
+}

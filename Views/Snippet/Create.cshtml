@@ -1,0 +1,58 @@
+@model SnippetFormViewModel
+@{
+    ViewData["Title"] = "Yeni Snippet";
+}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h2 class="section-title"><i class="bi bi-plus-circle"></i> Yeni Snippet Ekle</h2>
+        <div class="ch-form-card">
+            <form asp-action="Create" method="post" id="snippetForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Başlık</label>
+                    <input asp-for="Title" class="form-control" placeholder="Örn: LINQ ile gruplama" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Language" class="form-label">Dil</label>
+                    <select asp-for="Language" class="form-select" asp-items="ViewBag.Languages">
+                        <option value="">— Dil seç —</option>
+                    </select>
+                    <span asp-validation-for="Language" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Code" class="form-label">Kod</label>
+                    <textarea asp-for="Code" class="form-control ch-code" id="codeArea"
+                              placeholder="Kodunu buraya yapıştır..."></textarea>
+                    <span asp-validation-for="Code" class="text-danger small"></span>
+                    <small class="text-muted-ch">İpucu: Tab tuşu girinti ekler.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Açıklama</label>
+                    <textarea asp-for="Description" class="form-control" rows="2"
+                              placeholder="Kısa açıklama (opsiyonel)"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Etiketler</label>
+                    <input type="text" id="tagInput" class="form-control"
+                           placeholder="Etiket yaz ve Enter'a bas (örn: C#)" />
+                    <input type="hidden" asp-for="TagsCsv" id="tagsCsv" />
+                    <div id="tagBadges" class="mt-2"></div>
+                </div>
+
+                <button type="submit" class="btn btn-accent">Kaydet</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-ch">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/snippet-form.js"></script>
+}

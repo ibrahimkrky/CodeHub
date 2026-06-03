@@ -1,0 +1,72 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Keşfet";
+}
+
+<div class="ch-hero">
+    <h1>Kod paylaş, <span class="accent">keşfet</span>, geliştir.</h1>
+    <p>Geliştiricilerin kod parçacıklarını paylaştığı topluluk merkezi.</p>
+    <div class="ch-search">
+        <input type="text" id="searchBox" class="form-control"
+               placeholder="$ snippet ara..." autocomplete="off" />
+    </div>
+    @if (Model.Languages.Any())
+    {
+        <div class="mt-3" id="langFilters">
+            <span class="text-muted-ch small me-2">Diller:</span>
+            <button type="button" class="ch-badge ch-badge-link lang-btn active me-1 mb-1" data-lang="">Tümü</button>
+            @foreach (var lang in Model.Languages)
+            {
+                <button type="button" class="ch-badge ch-badge-link lang-btn me-1 mb-1" data-lang="@lang.ToLower()">@lang</button>
+            }
+        </div>
+    }
+</div>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2 class="section-title mb-0"><i class="bi bi-lightning-charge"></i> Snippet'ler</h2>
+    <div class="sort-bar">
+        <span class="text-muted-ch small me-1"><i class="bi bi-sort-down"></i> Sırala:</span>
+        <a asp-action="Index" asp-route-sort="new"
+           class="sort-link @(Model.CurrentSort == "new" ? "active" : "")">En Yeni</a>
+        <a asp-action="Index" asp-route-sort="popular"
+           class="sort-link @(Model.CurrentSort == "popular" ? "active" : "")">En Popüler</a>
+        <a asp-action="Index" asp-route-sort="views"
+           class="sort-link @(Model.CurrentSort == "views" ? "active" : "")">En Çok Görüntülenen</a>
+        <a asp-action="Index" asp-route-sort="old"
+           class="sort-link @(Model.CurrentSort == "old" ? "active" : "")">En Eski</a>
+    </div>
+</div>
+
+<div class="row g-3 mt-1" id="snippetGrid">
+    @foreach (var s in Model.Snippets)
+    {
+        <div class="col-md-6 col-lg-4 snippet-item" data-title="@s.Title.ToLower()" data-language="@s.Language.ToLower()">
+            <div class="ch-card clickable h-100" data-href="@Url.Action("Details", "Snippet", new { id = s.Id })">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="ch-badge">@s.Language</span>
+                        <small class="text-muted-ch"><i class="bi bi-star-fill text-warning"></i> @s.LikeCount</small>
+                    </div>
+                    <h5 class="card-title">
+                        <a asp-controller="Snippet" asp-action="Details" asp-route-id="@s.Id">@s.Title</a>
+                    </h5>
+                    <p class="text-muted-ch small mb-2">@s.Description</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="ch-tag">@@@(s.Author?.DisplayName ?? "anon")</span>
+                        <small class="text-muted-ch"><i class="bi bi-eye"></i> @s.ViewCount</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div id="noResult" class="text-center text-muted-ch py-5" style="display:none;">
+    <i class="bi bi-search"></i> Eşleşen snippet bulunamadı.
+</div>
+
+@section Scripts {
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+    <script src="~/js/card-click.js"></script>
+}
